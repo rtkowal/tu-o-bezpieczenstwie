@@ -9,4 +9,4 @@ ALLOWED_ORIGINS = "https://rtkowal.github.io"
 [[d1_databases]]
 binding = "DB"
 database_name = "tuobez-redakcja"
-database_id = "UZUPELNIJ_PO_wrangler_d1_create_tuobez-redakcja"
+database_id = "39d33c65-e4fc-4d94-8421-553335543856"
