@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Tu o Bezpieczeństwie · Redakcja</title>
+<script src="config.js"></script>
+<style>:root{box-sizing:border-box}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: jedna kolumna roboczej listy, pasek etapów u góry; marka ToTU = limonka na grafiku, w jasnym motywie limonka jako tło znaczników */
+:root{
+  --bg:#f4f5ef; --surface:#ffffff; --ink:#16180f; --muted:#5d6152; --line:#dfe2d4;
+  --lime:#d4ff00; --lime-ink:#16180f; --accent-text:#4d6000;
+  --ok:#1f7a3a; --warn:#a66a00; --bad:#b3261e; --chip:#eef0e4;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d0e0b; --surface:#17190f; --ink:#f1f3e8; --muted:#a3a894; --line:#2b2e22;
+  --lime:#d4ff00; --lime-ink:#0d0e0b; --accent-text:#d4ff00;
+  --ok:#5fd27f; --warn:#f2b441; --bad:#ff7a6e; --chip:#22251a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d0e0b; --surface:#17190f; --ink:#f1f3e8; --muted:#a3a894; --line:#2b2e22;
+  --lime:#d4ff00; --lime-ink:#0d0e0b; --accent-text:#d4ff00;
+  --ok:#5fd27f; --warn:#f2b441; --bad:#ff7a6e; --chip:#22251a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 80px;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;justify-content:space-between}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(28px,5vw,40px);line-height:1;margin:0;letter-spacing:-.02em}
+h1 span{background:var(--lime);color:var(--lime-ink);padding:0 .15em}
+h2{font-family:var(--display);font-weight:700;font-size:22px;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:700;font-size:18px;margin:0;line-height:1.25;text-wrap:balance}
+.controls{display:flex;flex-wrap:wrap;gap:10px}
+label.ctl{display:flex;flex-direction:column;gap:2px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+select,input[type=text],input[type=url],textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+textarea{width:100%;resize:vertical;min-height:60px;box-sizing:border-box}
+input[type=url],input[type=text]{width:100%;box-sizing:border-box}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+nav.steps{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--ink);padding-bottom:0}
+nav.steps button{font-family:var(--display);font-weight:700;font-size:15px;border:0;background:transparent;color:var(--muted);padding:10px 14px;cursor:pointer;border-radius:6px 6px 0 0}
+nav.steps button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.steps small{font-family:var(--mono);font-size:11px;font-weight:500;margin-left:6px;opacity:.8}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
+.count{font-family:var(--mono);font-size:14px;color:var(--ink);background:var(--chip);padding:4px 10px;border-radius:99px}
+.count.full{background:var(--lime);color:var(--lime-ink)}
+.bucket{display:flex;flex-direction:column;gap:10px}
+.bucket-h{font-family:var(--display);font-size:19px;font-weight:900;letter-spacing:-.01em;color:var(--accent-text);padding-top:18px;padding-bottom:6px;border-bottom:3px solid var(--lime)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start}
+.card.on{border-color:var(--ink);box-shadow:inset 4px 0 0 var(--lime)}
+.card .body{min-width:0;display:flex;flex-direction:column;gap:6px}
+.card p{margin:0}
+.pick{width:22px;height:22px;margin-top:2px;accent-color:#9bbd00;cursor:pointer}
+.kntz{font-size:15px}
+.kntz b{font-family:var(--display);font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:var(--lime);color:var(--lime-ink);padding:1px 6px;border-radius:3px;margin-right:6px}
+.src{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px}
+.src a{color:var(--accent-text)}
+.src.hot{background:#fff4b8;border-radius:6px;padding:6px 10px;align-items:center}
+.src.hot a{color:#4a3b00;font-weight:600}
+.src .temp{font-family:var(--mono);font-size:12px;color:#4a3b00;font-weight:700;margin-right:4px}
+.tally{text-align:right;font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap}
+.tally strong{display:block;font-size:22px;color:var(--ink);font-family:var(--display)}
+.who{font-size:12px;color:var(--muted)}
+.heat{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.panel .full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600}
+.field span.hint{font-weight:400;color:var(--muted);font-size:13px}
+.empty{border:2px dashed var(--line);border-radius:8px;padding:28px 20px;text-align:center;color:var(--muted)}
+.empty strong{display:block;font-family:var(--display);color:var(--ink);font-size:18px;margin-bottom:4px}
+.star{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:6px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.star[aria-pressed="true"]{background:var(--lime);color:var(--lime-ink);border-color:var(--lime);font-weight:700}
+.sides{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;font-size:14px}
+.sides div{background:var(--chip);border-radius:6px;padding:8px 10px}
+.sides div.gap{background:var(--lime);color:var(--lime-ink)}
+.sides em{display:block;font-style:normal;font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;opacity:.75}
+details summary{cursor:pointer;font-weight:600;font-size:14px}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.sheet .tag{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sheet ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.claim{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.c-verified{background:var(--ok)} .c-single_source{background:var(--warn)} .c-unverified,.c-contradicted{background:var(--bad)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.hook{display:flex;gap:10px;align-items:flex-start;background:var(--chip);border-radius:6px;padding:10px 12px}
+.hook input{margin-top:5px;accent-color:#9bbd00}
+.btn{font-family:var(--display);font-weight:700;font-size:15px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:6px;cursor:pointer}
+.btn.lime{background:var(--lime);color:var(--lime-ink);border-color:var(--lime)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.status{font-size:13px;color:var(--muted)} .status.err{color:var(--bad)}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--chip)}
+.pill.ok{background:var(--ok);color:#fff}
+.flag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--bad);color:#fff;margin-right:6px}
+.flagline{font-size:14px;color:var(--bad)}
+.warnbox{border-left:4px solid var(--bad);background:var(--chip);padding:10px 12px;border-radius:4px;font-size:14px}
+.warnbox ul{margin:6px 0 0;padding-left:18px}
+.secthead{font-family:var(--display);font-weight:900;font-size:24px;letter-spacing:-.01em;margin:18px 0 0;padding:6px 0 6px 12px;border-left:8px solid var(--lime)}
+.secthead small{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--muted);margin-left:8px}
+.note{font-size:14px;color:var(--muted);margin:0}
+.rnote{font-size:14px;color:var(--muted);border-left:3px solid var(--warn);padding-left:10px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.vcard.on{border-color:var(--ink);box-shadow:inset 0 4px 0 var(--lime)}
+.vcard .vh{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.3}
+.tl{list-style:none;margin:0;padding:0 0 0 14px;border-left:3px solid var(--lime);display:flex;flex-direction:column;gap:8px;font-size:14px}
+.tl b{display:block;font-family:var(--mono);font-size:12px;color:var(--accent-text)}
+.bars{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.bars div{display:grid;grid-template-columns:9em 1fr 2.5em;gap:8px;align-items:center}
+.bars i{display:block;height:14px;background:var(--lime);border:1px solid var(--ink);border-radius:2px}
+.bars span:last-child{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.light{--bg:#f6f7f1;--surface:#ffffff;--ink:#16180f;--muted:#4c5042;--line:#d4d8c6;--accent-text:#3d4d00;--ok:#1a6b32;--warn:#8a5800;--bad:#a8231b;--chip:#edefe3;--lime:#d4ff00;--lime-ink:#16180f;color-scheme:light;background:var(--bg);color:var(--ink);padding:18px;border-radius:10px}
+.light .warnbox{background:#fdf1ef}
+.light .sheet ul{gap:6px}
+.subt{font-family:var(--display);font-weight:700;font-size:17px;line-height:1.3;margin:10px 0 0;padding-top:8px;border-top:1px dashed var(--line)}
+.subwrap{display:flex;flex-direction:column;gap:4px}
+@media (max-width:560px){.card{grid-template-columns:auto 1fr}.card .tally{grid-column:2;text-align:left}.card .tally strong{display:inline;margin-right:6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Tu o Bezpieczeństwie <span>Redakcja</span></h1>
+    <div class="controls">
+      <label class="ctl" for="ep">Wydanie
+        <select id="ep"><option value="">brak wydań</option></select>
+      </label>
+      <label class="ctl" for="me">Głosujesz jako
+        <select id="me">
+          <option value="">wybierz…</option>
+          <option value="piotr">Piotr (×2)</option>
+          <option value="robert">Robert</option>
+          <option value="adam">Adam</option>
+          <option value="andrzej">Andrzej</option>
+        </select>
+      </label>
+      <button class="star" type="button" onclick="auth.set('');location.reload()">Wyloguj</button>
+    </div>
+  </header>
+
+  <nav class="steps" role="tablist">
+    <button role="tab" id="t-media" aria-selected="true" data-tab="media">1 · Media Brief<small>głosy do 11:00</small></button>
+    <button role="tab" id="t-research" aria-selected="false" data-tab="research">2 · Research Brief<small>selekcja do 14:00</small></button>
+    <button role="tab" id="t-content" aria-selected="false" data-tab="content">3 · Kartki<small>15:00</small></button>
+  </nav>
+
+  <p id="conn" class="status">Łączę z bazą redakcji…</p>
+  <section id="view" aria-live="polite"></section>
+</div>
+
+<script>
+const PEOPLE={piotr:{name:"Piotr",w:2},robert:{name:"Robert",w:1},adam:{name:"Adam",w:1},andrzej:{name:"Andrzej",w:1}};
+const BUCKETS={A:"A · Wojna na Ukrainie",B:"B · Dezinformacja i psyops",C:"C · Cyberwojna i hakowanie",D:"D · Odporność i wojna hybrydowa",E:"E · Wojsko, zbrojenia i obrona",F:"F · Służby i wywiad",G:"G · Geopolityka bezpieczeństwa: NATO, UE"};
+const SIDES=[["left","Lewica","radicalLeft"],["liberal","Libki"],["right","Prawica","radicalRight"]];
+const sideTxt=(n,k,r)=>[txt(n[k]),r?txt(n[r]):""].filter(Boolean).join(" ");
+const CUR={money:"pieniądze",power:"władza",privilege:"przywileje",status_emotions:"status i emocje"};
+const S={db:null,tab:"media",ep:"",me:"",episodes:[],brief:{},votes:[],sel:[],epDoc:null,unsub:[]};
+const $=s=>document.querySelector(s);
+const el=(tag,attrs,...kids)=>{if(attrs==null)attrs={};else if(typeof attrs!=="object"||attrs.nodeType||Array.isArray(attrs)){kids.unshift(attrs);attrs={}}const n=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(v==null)continue;if(k==="class")n.className=v;else if(k.startsWith("on"))n.addEventListener(k.slice(2),v);else n.setAttribute(k,v)}for(const c of kids.flat()){if(c==null||c===false)continue;n.append(c.nodeType?c:document.createTextNode(String(c)))}return n};
+const ls={get(k){try{return localStorage.getItem(k)||""}catch(e){return""}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function status(msg,err){const c=$("#conn");c.textContent=msg;c.className="status"+(err?" err":"")}
+function linkList(sources,heat){if(!sources||!sources.length)return null;return el("div",{class:"src"+(heat?" hot":"")},heat?el("span",{class:"temp"},"Temperatura "+"●".repeat(heat)+"○".repeat(5-heat)):null,sources.map(s=>el("a",{href:s.url,target:"_blank",rel:"noopener"},s.label||s.publisher||"źródło")))}
+
+/* ---------- dane ---------- */
+function subEpisode(){
+  S.unsub.forEach(u=>u());S.unsub=[];S.brief={};S.votes=[];S.sel=[];S.epDoc=null;
+  if(!S.ep||!S.db){render();return}
+  for(const kind of["media","research","content"]){
+    S.unsub.push(S.db.doc(`briefs/${S.ep}_${kind}`).onSnapshot(sn=>{S.brief[kind]=sn.exists?sn.data():null;render()},e=>status("Błąd odczytu: "+e.message,true)));
+  }
+  S.unsub.push(S.db.doc(`episodes/${S.ep}`).onSnapshot(sn=>{S.epDoc=sn.exists?sn.data():null;render()}));
+  S.unsub.push(S.db.collection("votes").where("date","==",S.ep).onSnapshot(q=>{S.votes=q.docs.map(d=>d.data());render()}));
+  S.unsub.push(S.db.collection("selections").where("date","==",S.ep).onSnapshot(q=>{S.sel=q.docs.map(d=>d.data());render()}));
+}
+let SAVE_CHAIN=Promise.resolve();
+async function save(coll,patch){
+  if(!S.me){status("Najpierw wybierz, kim jesteś (prawy górny róg).",true);return false}
+  try{
+    const ref=S.db.doc(`${coll}/${S.ep}_${S.me}`);
+    const list=coll==="votes"?S.votes:S.sel;
+    const cur=list.find(v=>v.person===S.me)||{date:S.ep,person:S.me};
+    const next={...cur,...patch,date:S.ep,person:S.me,updatedAt:new Date().toISOString()};
+    // od razu pokaż zmianę lokalnie, żeby kolejne kliknięcia liczyły się od aktualnego stanu
+    const fresh=[...list.filter(v=>v.person!==S.me),next];
+    if(coll==="votes")S.votes=fresh;else S.sel=fresh;
+    render();
+    const job=SAVE_CHAIN.then(()=>ref.set(next));SAVE_CHAIN=job.catch(()=>{});
+    await job;
+    status("Zapisano "+new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"}));return true;
+  }catch(e){status("Nie udało się zapisać: "+(e.message||e.code)+". Sprawdź, czy masz dostęp do edycji.",true);return false}
+}
+function tally(list,id){let pts=0,who=[];for(const v of list){if((v.picks||[]).includes(id)){pts+=PEOPLE[v.person]?.w||1;who.push(PEOPLE[v.person]?.name||v.person)}}return{pts,who}}
+const mine=list=>list.find(v=>v.person===S.me)||{};
+
+/* ---------- widoki ---------- */
+function isTyping(){const a=document.activeElement;return !!(a&&a.closest&&a.closest("#view")&&(a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&!["checkbox","radio"].includes(a.type))))}
+document.addEventListener("focusout",()=>{if(S.pendingRender){S.pendingRender=false;setTimeout(()=>{if(!isTyping())render();else S.pendingRender=true},0)}});
+function render(){
+  // nie przerysowuj strony, gdy ktoś pisze w polu tekstowym: tekst i kursor by przepadły
+  if(isTyping()){S.pendingRender=true;return}
+  document.querySelectorAll("nav.steps button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===S.tab)));
+  const v=$("#view");v.replaceChildren();
+  if(!S.db){v.append(el("div",{class:"empty"},el("strong","Brak połączenia z bazą"),"Podaj hasło redakcji, żeby zobaczyć briefy."));return}
+  if(!S.ep){v.append(el("div",{class:"empty"},el("strong","Nie ma jeszcze żadnego wydania"),"Media Brief na najbliższy dzień nagrania pojawi się tutaj o 9:00."));return}
+  if(S.tab==="media")v.append(viewMedia());else if(S.tab==="research")v.append(viewResearch());else v.append(viewContent());
+}
+
+function viewMedia(){
+  const b=S.brief.media;
+  if(!b)return el("div",{class:"empty"},el("strong","Media Brief jeszcze się generuje"),"Będzie gotowy o 9:00. Strona odświeży się sama.");
+  const my=mine(S.votes),picks=my.picks||[];
+  const box=el("div",{class:"bucket"});
+  box.append(el("div",{class:"bar"},
+    el("span",null,`${b.topics.length} tematów z ostatnich 7 dni · wygenerowano ${fmtTime(b.generatedAt)}`),
+    el("span",{class:"count"+(picks.length>=5?" full":"")},`Twoje głosy: ${picks.length}/5`)));
+  const groups={};for(const t of b.topics)(groups[t.bucket||"G"]??=[]).push(t);
+  for(const k of Object.keys(BUCKETS)){if(!groups[k])continue;
+    box.append(el("div",{class:"bucket-h"},BUCKETS[k]));
+    for(const t of groups[k]){
+      const on=picks.includes(t.id),{pts,who}=tally(S.votes,t.id);
+      const cb=el("input",{type:"checkbox",class:"pick",id:"m-"+t.id,"aria-label":"Wybierz: "+t.title});cb.checked=on;
+      cb.disabled=!on&&picks.length>=5;
+      cb.addEventListener("change",()=>{const next=cb.checked?[...picks,t.id]:picks.filter(x=>x!==t.id);save("votes",{picks:next})});
+      box.append(el("article",{class:"card"+(on?" on":"")},cb,
+        el("div",{class:"body"},
+          el("h3",null,el("label",{for:"m-"+t.id},t.title)),flagEl(t.flag),
+          t.summary?el("p",null,t.summary):null,
+          t.whoProfits?el("p",{class:"kntz"},el("b","Kto zarabia"),t.whoProfits):null,
+          subtopics(t),
+          (t.related||[]).length?el("p",{class:"heat"},"🔗 Łączy się z: "+t.related.map(id=>(b.topics.find(x=>x.id===id)||{title:id}).title).join(" · ")):null,
+          linkList(t.sources,t.heat)),
+        el("div",{class:"tally"},el("strong",String(pts)),"pkt",who.length?el("div",{class:"who"},who.join(", ")):null)));
+    }}
+  box.append(el("h2",{style:"margin-top:12px"},"Twoje uwagi i linki"));
+  const saveBtn=el("button",{class:"btn lime",type:"button",style:"justify-self:start"},"Zapisz uwagi i linki");
+  saveBtn.addEventListener("mousedown",e=>e.preventDefault());
+  saveBtn.addEventListener("click",()=>{const a=document.activeElement;if(a&&a.blur)a.blur();Promise.resolve().then(()=>status("Zapisano uwagi "+new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"})))});
+  box.append(el("div",{class:"panel"},
+    field("v-comment","Komentarz do wyboru","Co Cię przekonało, czego brakuje.",ta("v-comment",my.comment,v=>save("votes",{comment:v}))),
+    field("v-extra","Dodatkowy temat do researchu","Jeden temat spoza listy.",ta("v-extra",my.extraTopic,v=>save("votes",{extraTopic:v}))),
+    field("v-fake","Ściema Dnia / FakeOFF","Link do shorta lub posta z dezinformacją.",inp("v-fake","url",my.fakeoffUrl,v=>save("votes",{fakeoffUrl:v}))),
+    field("v-app","Pytanie z Apki","Link do nagrania widza.",inp("v-app","url",my.appUrl,v=>save("votes",{appUrl:v}))),el("div",{class:"full"},saveBtn)));
+  return box;
+}
+
+function viewResearch(){
+  const b=S.brief.research;
+  if(!b)return el("div",{class:"empty"},el("strong","Research Brief będzie gotowy o 12:00"),"Głosowanie nad Media Briefem trwa do 11:00.");
+  const my=mine(S.sel),picks=my.picks||[],notes=my.notes||{};
+  const box=el("div",{class:"bucket"});
+  if(b.votingNote)box.append(el("p",{class:"note"},b.votingNote));
+  box.append(el("div",{class:"bar"},el("span",null,"Wybierz 4 tematy i zaproponuj główny. Uwagi trafią wprost do Content Briefu."),
+    el("span",{class:"count"+(picks.length>=4?" full":"")},`Twoja selekcja: ${picks.length}/4`)));
+  for(const t of b.topics){
+    const on=picks.includes(t.id),{pts,who}=tally(S.sel,t.id),mains=S.sel.filter(s=>s.main===t.id).map(s=>PEOPLE[s.person]?.name);
+    const cb=el("input",{type:"checkbox",class:"pick",id:"r-"+t.id,"aria-label":"Na shortlistę: "+t.title});cb.checked=on;cb.disabled=!on&&picks.length>=4;
+    cb.addEventListener("change",()=>{const next=cb.checked?[...picks,t.id]:picks.filter(x=>x!==t.id);save("selections",{picks:next,main:next.includes(my.main)?my.main:null})});
+    const star=el("button",{class:"star","aria-pressed":String(my.main===t.id),type:"button"},my.main===t.id?"★ Główny":"☆ Na główny");
+    star.addEventListener("click",()=>{const next=picks.includes(t.id)?picks:[...picks,t.id].slice(-4);save("selections",{main:my.main===t.id?null:t.id,picks:next})});
+    const sides=t.narratives?el("div",{class:"sides"},SIDES.filter(([k,,r])=>sideTxt(t.narratives,k,r)).map(([k,l,r])=>el("div",null,el("em",l),sideTxt(t.narratives,k,r))),t.narratives.gap?el("div",{class:"gap"},el("em","Luka narracyjna"),txt(t.narratives.gap)):null):null;
+    box.append(el("article",{class:"card"+(on?" on":"")},cb,
+      el("div",{class:"body"},
+        el("h3",null,el("label",{for:"r-"+t.id},t.questionTitle||t.title)),flagEl(t.flag),
+        t.thesis?el("p",null,t.thesis):null,
+        subtopics(t),
+        (t.whoProfits||[]).length?el("p",{class:"kntz"},el("b","Kto zarabia"),t.whoProfits.map(w=>`${w.actor} (${CUR[w.currency]||w.currency}): ${w.mechanism}`).join(" · ")):null,
+        t.whoPays?el("p",{class:"kntz"},el("b","Kto płaci"),t.whoPays):null,
+        sides,
+        (t.keyFacts||[]).length?el("div",null,el("h3",{style:"font-size:15px;margin-bottom:4px"},"Fakty i dane"),el("ul",{style:"margin:0;padding-left:20px"},t.keyFacts.map(f=>el("li",null,linkify(f))))):null,
+        t.visualIdea?el("div",{class:"src hot"},el("span",{class:"temp"},"Infografika"),el("span",{style:"color:#4a3b00"},t.visualIdea)):null,
+        t.researchNotes?el("p",{class:"rnote"},el("strong","Do sprawdzenia: "),t.researchNotes):null,
+        linkList(t.sources),
+        ta("n-"+t.id,notes[t.id],v=>save("selections",{notes:{...notes,[t.id]:v}}),"Twoja uwaga do tego tematu…")),
+      el("div",{class:"tally"},el("strong",String(pts)),"pkt",who.length?el("div",{class:"who"},who.join(", ")):null,mains.length?el("div",{class:"who"},"★ "+mains.join(", ")):null,star)));
+  }
+  return box;
+}
+
+function viewContent(){
+  const c=S.brief.content;
+  if(!c)return el("div",{class:"empty"},el("strong","Kartki będą gotowe o 15:00"),"Selekcja z shortlisty trwa do 14:00.");
+  const claims=Object.fromEntries((c.claims||[]).map(x=>[x.id,x]));
+  const approved=S.epDoc?.approved,chosenHook=S.epDoc?.selectedHook,chosenVis=S.epDoc?.selectedVisuals||[];
+  const topics=[...(c.topics||[])].sort((a,b)=>(a.role==="MAIN"?0:1)-(b.role==="MAIN"?0:1));
+  const label=i=>i===0?"Temat główny":"Temat #"+(i+1);
+  const box=el("div",{class:"bucket light"});
+  box.append(el("div",{class:"bar"},el("div",{class:"legend"},el("span",null,el("i",{class:"claim c-verified"}),"potwierdzone w źródle"),el("span",null,el("i",{class:"claim c-unverified"}),"niepotwierdzone, nie mówić na antenie"),el("span",null,el("span",{class:"flag"},"flaga"),"podejrzane, nie podawać jako faktu")),
+    approved?el("span",{class:"pill ok"},"Zatwierdzone przez Piotra"):el("span",{class:"pill"},"Czeka na zatwierdzenie")));
+  if(c.selectionNote)box.append(el("p",{class:"note"},c.selectionNote));
+  const isRisky=x=>x.status==="unverified"||x.status==="contradicted"||x.flag;
+
+  // 1. Hooki
+  box.append(el("h2",{class:"secthead"},"Trzy hooki do wyboru",el("small",null,"wybiera Piotr")));
+  const hk=el("div",{class:"sheet"});
+  (c.hooks||[]).forEach(h=>{const r=el("input",{type:"radio",name:"hook",id:"h-"+h.id,value:h.id});r.checked=chosenHook===h.id;r.disabled=S.me!=="piotr";
+    r.addEventListener("change",()=>updEp({selectedHook:h.id}));
+    hk.append(el("label",{class:"hook",for:"h-"+h.id},r,el("div",null,el("strong",h.first5s),el("div",{class:"who"},"5–15 s: "+(h.stake5to15s||"")))))});
+  box.append(hk);
+
+  // 2. FakeOFF
+  box.append(el("h2",{class:"secthead"},"FakeOFF / Ściema Dnia"));
+  const fo=c.fakeoff||{},aq=c.appQuestion||{};
+  const fs=el("div",{class:"sheet"});
+  fs.append(el("p",null,txt(fo.summary)||"Brak materiału.",fo.url?el("span",null," ",el("a",{href:fo.url,target:"_blank",rel:"noopener"},"link")):null));
+  if((fo.spreaders||[]).length)fs.append(el("p",{class:"kntz"},el("b","Kto rozpowszechnia"),fo.spreaders.map(s=>`${s.name} (${s.platform}${s.reach?", zasięg: "+s.reach:""})`).join(" · ")));
+  if(fo.whoBenefits)fs.append(el("p",{class:"kntz"},el("b","Kto zyskuje"),fo.whoBenefits));
+  if(!fo.url)fs.append(el("p",{class:"who"},"Nikt z redakcji nie podał linku do konkretnego posta. Wklej go w Media Briefie w polu „Ściema Dnia / FakeOFF”."));
+  fs.append(el("h3","Pytanie z Apki"),el("p",null,txt(aq.context)||"Brak.",aq.url?el("span",null," ",el("a",{href:aq.url,target:"_blank",rel:"noopener"},"nagranie")):null));
+  if((c.callbacks||[]).length)fs.append(el("h3","Nawiązania do poprzednich odcinków"),el("ul",null,c.callbacks.map(k=>el("li",null,`${k.episodeId}: ${k.topicTitle}`))));
+  box.append(fs);
+
+  // 3. Tematy
+  topics.forEach((t,i)=>{
+    box.append(el("h2",{class:"secthead"},label(i),el("small",null,BUCKETS[t.bucket]||"")));
+    const s=el("div",{class:"sheet"},el("span",{class:"tag"},t.title||""),el("h2",null,t.questionTitle||t.title));
+    const tr=(c.claims||[]).filter(x=>x.id.startsWith(t.id+"c")&&isRisky(x));
+    if(tr.length)s.append(el("div",{class:"warnbox"},el("strong",`Do sprawdzenia przed anteną (${tr.length})`),el("ul",null,tr.map(r=>el("li",null,el("i",{class:"claim c-"+(r.status||"unverified"),title:r.status}),r.flag?el("span",{class:"flag"},r.flag.level):null,r.text,r.flag?.reason?el("span",{class:"flagline"}," ("+r.flag.reason+")"):null)))));
+    if(t.thesis)s.append(el("p",null,el("strong","Teza: "),t.thesis));
+    if((t.whoProfits||[]).length)s.append(el("h3","Kto na tym zarabia"),el("ul",null,t.whoProfits.map(w=>el("li",null,el("strong",(w.actor||w.actorId)+" · "+(CUR[w.currency]||w.currency)+": "),w.mechanism,w.amount&&typeof w.amount==="object"&&w.amount.value?` (${w.amount.value} ${w.amount.unit||""})`:(typeof w.amount==="string"?` (${w.amount})`:"")))));
+    if((t.whoPays||[]).length)s.append(el("h3","Kto płaci"),el("ul",null,t.whoPays.map(w=>el("li",null,(w.actor||w.actorId)+": "+w.cost))));
+    if(t.narratives)s.append(el("h3","Co mówią (etykiety robocze)"),el("div",{class:"sides"},SIDES.map(([k,l,r])=>el("div",null,el("em",l),sideTxt(t.narratives,k,r)||el("span",{class:"who"},"brak wypowiedzi"))),t.narratives.gap?el("div",{class:"gap"},el("em","Luka narracyjna"),txt(t.narratives.gap)):null));
+    if((t.threadsFirst8min||[]).length)s.append(el("h3","Trzy wątki na pierwsze 8 minut"),el("ol",null,t.threadsFirst8min.map(x=>el("li",null,x))));
+    if(t.counterNoise)s.append(el("h3","Kontra przeciw szumowi"),el("p",null,t.counterNoise));
+    if((t.facts||[]).length)s.append(el("h3","Fakty i przypisy"),el("ul",null,t.facts.map(id=>{const k=claims[id];if(!k)return el("li",null,el("i",{class:"claim c-unverified",title:"bez przypisu"}),id);const srcs=k.sources||[];return el("li",null,el("i",{class:"claim c-"+(k.status||"unverified"),title:k.status}),k.flag?el("span",{class:"flag"},k.flag.level||"flaga"):null,k.text,k.flag?.reason?el("span",{class:"flagline"}," ("+k.flag.reason+")"):null,srcs.length?el("span",null," · ",srcs.flatMap((x,j)=>[j?", ":"",el("a",{href:x.url,target:"_blank",rel:"noopener"},x.publisher||"źródło")])):null)})));
+    box.append(s);
+  });
+
+  // 4. Infografiki
+  box.append(el("h2",{class:"secthead"},"Infografiki",el("small",null,"po jednej na temat · zaznacz, którą robimy")));
+  const vg=el("div",{class:"vgrid"});
+  topics.forEach((t,i)=>{const v=t.visual;if(!v)return;
+    const on=chosenVis.includes(t.id);
+    const btn=el("button",{class:"star",type:"button","aria-pressed":String(on)},on?"✓ Robimy":"Wybierz");
+    btn.addEventListener("click",()=>updEp({selectedVisuals:on?chosenVis.filter(x=>x!==t.id):[...chosenVis,t.id]}));
+    const card=el("div",{class:"vcard"+(on?" on":"")},el("span",{class:"tag"},label(i)+" · "+(v.type||"")),el("div",{class:"vh"},v.headline||""));
+    if((v.items||[]).length)card.append(el("ul",{class:"tl"},v.items.map(x=>el("li",null,el("b",x.date),x.label))));
+    if((v.bars||[]).length){const mx=Math.max(...v.bars.map(b=>b.value));card.append(el("div",{class:"bars"},v.bars.map(b=>el("div",null,el("span",null,b.label),el("i",{style:`width:${Math.max(4,b.value/mx*100)}%`}),el("span",null,String(b.value))))))}
+    if(v.note)card.append(el("p",{class:"who"},v.note));
+    card.append(el("span",{class:"who"},v.footer||""),btn);
+    vg.append(card)});
+  box.append(vg);
+
+  // 5. Tytuły
+  box.append(el("h2",{class:"secthead"},"Pomysły na tytuł"));
+  box.append(el("div",{class:"ideas"},topics.filter(t=>(t.titleIdeas||[]).length).map(t=>el("div",{class:"sheet"},el("span",{class:"tag"},label(topics.indexOf(t))),el("ul",null,t.titleIdeas.map(x=>el("li",null,x)))))));
+  // 6. Miniatury
+  box.append(el("h2",{class:"secthead"},"Pomysły na miniaturę"));
+  box.append(el("div",{class:"ideas"},topics.filter(t=>(t.thumbnailIdeas||[]).length).map(t=>el("div",{class:"sheet"},el("span",{class:"tag"},label(topics.indexOf(t))),el("ul",null,t.thumbnailIdeas.map(x=>el("li",null,x)))))));
+
+  if(S.me==="piotr"){const b=el("button",{class:"btn lime",type:"button"},approved?"Cofnij zatwierdzenie":"Zatwierdzam kartki");b.addEventListener("click",()=>updEp({approved:!approved,approvedAt:new Date().toISOString()}));box.append(b)}
+  return box;
+}
+
+async function updEp(patch){try{const ref=S.db.doc(`episodes/${S.ep}`);const next={...(S.epDoc||{date:S.ep}),...patch};S.epDoc=next;render();const job=SAVE_CHAIN.then(()=>ref.set(next));SAVE_CHAIN=job.catch(()=>{});await job;status("Zapisano")}catch(e){status("Nie udało się zapisać: "+(e.message||e.code),true)}}
+
+/* ---------- drobne ---------- */
+function linkify(s){const parts=String(s).split(/(https?:\/\/[^\s),]+)/g);return parts.map((p,i)=>i%2?el("a",{href:p,target:"_blank",rel:"noopener"},"źródło"):p)}
+function subtopics(t){if(!(t.subtopics||[]).length)return null;return el("div",{class:"subwrap"},t.subtopics.map(s=>el("div",null,el("h2",{class:"subt"},s.title),s.summary?el("p",null,s.summary):null,flagEl(s.flag),(s.keyFacts||[]).length?el("ul",{style:"margin:4px 0 0;padding-left:20px"},s.keyFacts.map(f=>el("li",null,linkify(f)))):null,linkList(s.sources))))}
+function flagEl(f){if(!f)return null;return el("p",{class:"flagline"},el("span",{class:"flag"},f.level||"flaga"),f.reason||"")}
+function txt(x){return typeof x==="string"?x:(x?.says||"")}
+function fmtTime(iso){if(!iso)return"";try{return new Date(iso).toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"})}catch(e){return""}}
+function field(id,label,hint,ctl){return el("label",{class:"field",for:id},label,el("span",{class:"hint"},hint),ctl)}
+function ta(id,val,onSave,ph){const t=el("textarea",{id,placeholder:ph||""});t.value=val||"";t.addEventListener("blur",()=>{if(t.value!==(val||""))onSave(t.value.trim())});return t}
+function inp(id,type,val,onSave){const t=el("input",{id,type,placeholder:"https://…"});t.value=val||"";t.addEventListener("blur",()=>{if(t.value!==(val||""))onSave(t.value.trim())});return t}
+
+/* ---------- połączenie z API redakcji (Cloudflare Worker) ---------- */
+const API=(window.TUITERAZ_API||"").replace(/\/$/,"");
+const auth={get(){try{return localStorage.getItem("tob-token")||""}catch(e){return""}},set(t){try{t?localStorage.setItem("tob-token",t):localStorage.removeItem("tob-token")}catch(e){}}};
+async function api(path,opt={}){
+  const r=await fetch(API+path,{...opt,headers:{"Content-Type":"application/json",...(opt.headers||{}),Authorization:"Bearer "+auth.get()}});
+  if(r.status===401){auth.set("");showLogin();throw new Error("Sesja wygasła. Zaloguj się ponownie.")}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||("HTTP "+r.status));return j;
+}
+const POLL=10000;
+let LAST_WRITE=0,WRITING=0;
+function poll(fn,cb,err){let alive=true;const tick=async()=>{if(!alive)return;const started=Date.now();try{const r=await fn();if(alive&&!WRITING&&started>LAST_WRITE)cb(r)}catch(e){err&&err(e)}if(alive)setTimeout(tick,POLL)};tick();return()=>{alive=false}}
+function docRef(path){const[c,id]=path.split("/");return{
+  onSnapshot(cb,err){return poll(()=>api(`/api/doc/${c}/${encodeURIComponent(id)}`).then(d=>({exists:d.exists,data:()=>d.data})),cb,err)},
+  async set(data){WRITING++;try{await api(`/api/doc/${c}/${encodeURIComponent(id)}`,{method:"PUT",body:JSON.stringify(data)})}finally{WRITING--;LAST_WRITE=Date.now()}}}}
+function collRef(c,field,eq){return{
+  where(f,op,v){return collRef(c,f,v)},
+  onSnapshot(cb,err){const q=field?`?field=${encodeURIComponent(field)}&eq=${encodeURIComponent(eq)}`:"";return poll(()=>api(`/api/list/${c}${q}`).then(r=>({docs:r.docs.map(d=>({id:d.id,data:()=>d.data}))})),cb,err)}}}
+const remoteDb={doc:docRef,collection:c=>collRef(c)};
+function showLogin(){
+  const v=document.getElementById("view");if(!v)return;
+  status("Podaj hasło redakcji.",false);
+  const inp=el("input",{type:"password",id:"pw",placeholder:"Hasło redakcji",autocomplete:"current-password"});
+  const btn=el("button",{class:"btn lime",type:"submit"},"Wejdź");
+  const msg=el("p",{class:"status"});
+  const f=el("form",{class:"panel",style:"max-width:420px"},el("label",{class:"field",for:"pw"},"Hasło",inp),btn,msg);
+  f.addEventListener("submit",async e=>{e.preventDefault();btn.disabled=true;msg.textContent="Sprawdzam…";
+    try{const r=await fetch(API+"/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:inp.value})});const j=await r.json();
+      if(!r.ok)throw new Error(j.error||"Złe hasło.");auth.set(j.token);location.reload()}
+    catch(err){msg.textContent=err.message;msg.className="status err";btn.disabled=false}});
+  v.replaceChildren(el("div",{class:"empty",style:"text-align:left"},el("strong","Tu o Bezpieczeństwie · Redakcja"),"Strona tylko dla redakcji. Hasło dostaniesz od Roberta."),f);
+}
+async function connectDb(){
+  if(!API){status("Brak adresu API w config.js.",true);return null}
+  if(!auth.get()){showLogin();return "login"}
+  return remoteDb;
+}
+
+/* ---------- start ---------- */
+document.querySelectorAll("nav.steps button").forEach(b=>b.addEventListener("click",()=>{S.tab=b.dataset.tab;ls.set("tob-tab",S.tab);render()}));
+$("#me").value=S.me=ls.get("tob-me");
+$("#me").addEventListener("change",e=>{S.me=e.target.value;ls.set("tob-me",S.me);render()});
+$("#ep").addEventListener("change",e=>{S.ep=e.target.value;subEpisode()});
+S.tab=ls.get("tob-tab")||"media";
+render();
+(async()=>{
+  const db=await connectDb();
+  if(db==="login")return;
+  if(!db)return;
+  S.db=db;status("Połączono z bazą redakcji.");
+  db.collection("episodes").onSnapshot(q=>{
+    const list=q.docs.map(d=>d.id).sort().reverse();S.episodes=list;
+    const sel=$("#ep");sel.replaceChildren(...(list.length?list.map(id=>el("option",{value:id},fmtDate(id))):[el("option",{value:""},"brak wydań")]));
+    if(!S.ep||!list.includes(S.ep)){S.ep=list[0]||"";sel.value=S.ep;subEpisode()}else sel.value=S.ep;
+  },e=>status("Błąd odczytu wydań: "+e.message,true));
+})();
+function fmtDate(id){try{return new Date(id+"T12:00:00").toLocaleDateString("pl-PL",{weekday:"long",day:"numeric",month:"long"})}catch(e){return id}}
+</script>
+</body>
+</html>
